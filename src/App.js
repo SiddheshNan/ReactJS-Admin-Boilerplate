@@ -1,9 +1,20 @@
-import React from 'react';
+import React from "react";
+import { GlobalProvider } from "./context/GlobalState";
+import { Switch, Route, HashRouter } from "react-router-dom";
+import HomePage from "./pages/HomePage";
+import SignIn from "./pages/SignIn";
 
-function App() {
+const App = () => {
   return (
-    <h1>Hi</h1>
+    <GlobalProvider>
+      <HashRouter>
+        <Switch>
+          <Route exact path="/" render={(props) => <HomePage {...props} />} />
+           <Route exact path="/signin" render={(props) => <SignIn {...props} />} />
+        </Switch>
+      </HashRouter>
+    </GlobalProvider>
   );
-}
+};
 
 export default App;

@@ -1,9 +1,29 @@
 import React, { createContext, useReducer } from "react";
 import AppReducer from "./AppReducer";
+import { app_name } from "../AppInfo";
+
+const setEmptyStorage = () => {
+  const example_userInfo = {
+    isLogeedIn: false,
+    userName: "",
+    userEmail: "",
+    userAccessToken: "",
+    userRefreshToken: "",
+  };
+
+  localStorage.setItem(
+    app_name + "_userInfo",
+    JSON.stringify(example_userInfo)
+  );
+
+  return example_userInfo;
+};
 
 // Initial state
 const initialState = {
-  transactions: [],
+  userInfo: localStorage.getItem(app_name + "_userInfo")
+    ? JSON.parse(localStorage.getItem(app_name + "_userInfo"))
+    : setEmptyStorage(),
 };
 
 // Create context
@@ -14,26 +34,18 @@ export const GlobalProvider = ({ children }) => {
   const [state, dispatch] = useReducer(AppReducer, initialState);
 
   // Actions
-  function deleteTransaction(id) {
+  function updateUser(user) {
     dispatch({
-      type: "DELETE_TRANSACTION",
-      payload: id,
-    });
-  }
-
-  function addTransaction(transaction) {
-    dispatch({
-      type: "ADD_TRANSACTION",
-      payload: transaction,
+      type: "UPDATE_USER",
+      payload: user,
     });
   }
 
   return (
     <GlobalContext.Provider
       value={{
-        transactions: state.transactions,
-        deleteTransaction,
-        addTransaction,
+        userInfo: state.userInfo,
+        updateUser,
       }}
     >
       {children}
